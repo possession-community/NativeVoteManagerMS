@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="NativeVoteManagerMS.Shared\NativeVoteManagerMS.Shared.csproj" Type="Classic C#" />
+  <Project Path="NativeVoteManagerMS\NativeVoteManagerMS.csproj" Type="Classic C#" />
+</Solution>
