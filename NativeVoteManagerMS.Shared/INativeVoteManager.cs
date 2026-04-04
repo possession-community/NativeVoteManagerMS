@@ -27,5 +27,5 @@ public interface INativeVoteManager
     bool IsAnyVoteInProgress { get; }
     VoteState? GetVoteState();
 
-    void SetDefaultMenuCompat(IMenuCompat customMenuCompat);
+    void SetDefaultMenuCompat(IMenuCompat? customMenuCompat);
 }

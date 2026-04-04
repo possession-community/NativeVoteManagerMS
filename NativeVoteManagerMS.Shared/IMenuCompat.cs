@@ -11,6 +11,8 @@ public interface IMenuCompat
 
     void SetVoteOptions(VoteOptions options);
 
+    void Cleanup();
+
     /// <summary>
     /// Callback invoked when a player selects a vote option.
     /// Set by NativeVoteManager to bridge menu selection to vote processing.

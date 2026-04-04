@@ -17,7 +17,7 @@ public class NativeVoteManager(ISharedSystem sharedSystem, ILogger logger) : INa
     private readonly Dictionary<VoteContent, List<IGameClient>> _votes = new();
     private Guid? _voteTimerId;
 
-    public void SetDefaultMenuCompat(IMenuCompat menuCompat)
+    public void SetDefaultMenuCompat(IMenuCompat? menuCompat)
     {
         _defaultMenuCompat = menuCompat;
         logger.LogInformation("Default menu compat has been set");
@@ -158,12 +158,17 @@ public class NativeVoteManager(ISharedSystem sharedSystem, ILogger logger) : INa
 
     private void Cleanup()
     {
-        if (_activeMenuCompat is { } menu && _activeVoteOptions?.Participants is { } participants)
+        if (_activeMenuCompat is { } menu)
         {
-            foreach (var participant in participants)
+            if (_activeVoteOptions?.Participants is { } participants)
             {
-                menu.CloseMenu(participant);
+                foreach (var participant in participants)
+                {
+                    menu.CloseMenu(participant);
+                }
             }
+
+            menu.Cleanup();
         }
 
         _activeVoteOptions = null;

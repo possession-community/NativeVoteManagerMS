@@ -8,7 +8,7 @@ namespace NativeVoteManagerMS;
 
 public class NativeVoteManagerMs : IModSharpModule
 {
-    protected NativeVoteManagerMs(ISharedSystem  sharedSystem,
+    public NativeVoteManagerMs(ISharedSystem  sharedSystem,
         string         dllPath,
         string         sharpPath,
         Version?       version,
