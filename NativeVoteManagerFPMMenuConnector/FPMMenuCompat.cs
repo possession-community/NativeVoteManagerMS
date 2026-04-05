@@ -8,7 +8,7 @@ namespace NativeVoteManagerFPMMenuConnector;
 
 public class FPMMenuCompat(ISharedSystem sharedSystem, IMenuManager menuManager): IMenuCompat
 {
-    private VoteOptions _voteOptions = null!;
+    private MultiChoiceVoteOptions _voteOptions = null!;
     private Dictionary<IGameClient, Menu> _menuCaches = new();
     
     public void OpenMenu(IGameClient target)
@@ -77,7 +77,7 @@ public class FPMMenuCompat(ISharedSystem sharedSystem, IMenuManager menuManager)
         }
     }
 
-    public void SetVoteOptions(VoteOptions options)
+    public void SetVoteOptions(MultiChoiceVoteOptions options)
     {
         _voteOptions = options;
     }
