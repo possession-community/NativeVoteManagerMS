@@ -20,8 +20,8 @@ internal class NativeYesNoHandler : IVoteTypeHandler, IEventListener
     private readonly List<IGameClient> _yesVoters = new();
     private readonly List<IGameClient> _noVoters = new();
 
-    private static readonly VoteContent YesContent = new(0, "yes", _ => "Yes");
-    private static readonly VoteContent NoContent = new(1, "no", _ => "No");
+    private static readonly VoteContent YesContent = new(){Index = 0, InternalName = "yes", VisibleName = _ => "Yes"};
+    private static readonly VoteContent NoContent = new(){ Index = 1, InternalName = "no", VisibleName = _ => "No"};
     
     private IGameEvent? _cachedVoteChangedEvent = null;
 
