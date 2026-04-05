@@ -38,22 +38,33 @@ internal class NativeYesNoHandler : IVoteTypeHandler, IEventListener
 
     public void Start()
     {
-        _voteController = (IVoteController)_sharedSystem.GetEntityManager().FindEntityByClassname(null, "vote_controller")!;
+        var voteCon = _sharedSystem.GetEntityManager().FindEntityByClassname(null, "vote_controller")!;
+        _voteController = _sharedSystem.GetEntityManager().FindEntityByIndex<IVoteController>(voteCon.Index);
+        
+        if (_voteController is null)
+            throw new InvalidOperationException("Could not find vote_controller");
+        
         CleanupVoteController();
-        
+
         _voteController.PotentialVotes = _options.Participants!.Count;
-        
+        // _voteController.ActiveIssueIndex = 2;
+        _voteController.IsYesNoVote = true;
+        _voteController.OnlyTeamToVote = -1;
+        _voteController.SetNetVar("m_iActiveIssueIndex", 2);
+
         _sharedSystem.GetEventManager().InstallEventListener(this);
-        
-        
+
         RefreshVotes();
-        
-        
-        foreach (var participant in _options.Participants)
+
+        // Delay VoteStart UserMessage to allow VoteController changes to propagate
+        _sharedSystem.GetModSharp().PushTimer(() =>
         {
-            SendVoteStartUm(participant);
-        }
-        
+            foreach (var participant in _options.Participants)
+            {
+                SendVoteStartUm(participant);
+            }
+        }, 0.2f);
+
         _options.VoteHandler.OnVoteInitiated();
     }
 
@@ -256,6 +267,7 @@ internal class NativeYesNoHandler : IVoteTypeHandler, IEventListener
         if (@event.Name != "vote_cast")
             return;
 
+        _sharedSystem.GetModSharp().PrintToChatAll("Vote Cast");
         var controller = @event.GetPlayerController("userid");
         
         if (controller == null)
