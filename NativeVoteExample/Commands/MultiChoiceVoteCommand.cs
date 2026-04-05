@@ -19,7 +19,7 @@ public class MultiChoiceVoteCommand(INativeVoteManager voteManager, ISharedSyste
         }
         List<VoteContent> voteContents = new();
 
-        for (int i = 1; i < command.ArgCount; i++)
+        for (int i = 2; i < command.ArgCount; i++)
         {
             var cacheI = i;
             if (i % 2 == 0)

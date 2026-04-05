@@ -30,6 +30,10 @@ internal class MultiChoiceHandler : IVoteTypeHandler
 
         _menuCompat.OnChoice = OnPlayerChoice;
         _menuCompat.SetVoteOptions(_options);
+        foreach (var pa in _options.Participants!)
+        {
+            _menuCompat.OpenMenu(pa);
+        }
         _options.VoteHandler.OnVoteInitiated();
     }
 
