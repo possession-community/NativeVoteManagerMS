@@ -9,7 +9,7 @@ public interface IMenuCompat
     void OpenMenu(IGameClient target);
     void CloseMenu(IGameClient target);
 
-    void SetVoteOptions(VoteOptions options);
+    void SetVoteOptions(MultiChoiceVoteOptions options);
 
     void Cleanup();
 
