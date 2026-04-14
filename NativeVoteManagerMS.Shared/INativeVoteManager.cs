@@ -6,13 +6,13 @@ public interface INativeVoteManager
 {
     const string ModSharpModuleIdentity = "NativeVoteManagerMS.Shared.INativeVoteManager";
 
-    void InitiateYesNoVote(YesNoVoteOptions options);
+    VoteInitiateResult InitiateYesNoVote(YesNoVoteOptions options);
 
-    void InitiateMultiChoiceVote(MultiChoiceVoteOptions options);
-    void InitiateMultiChoiceVote(MultiChoiceVoteOptions options, IMenuCompat customMenuCompat);
+    VoteInitiateResult InitiateMultiChoiceVote(MultiChoiceVoteOptions options);
+    VoteInitiateResult InitiateMultiChoiceVote(MultiChoiceVoteOptions options, IMenuCompat customMenuCompat);
 
-    void CancelVote();
-    void EndVote();
+    VoteCancelResult CancelVote();
+    VoteEndResult EndVote();
 
     bool IsAnyVoteInProgress { get; }
     YesNoVoteState? GetYesNoVoteState();

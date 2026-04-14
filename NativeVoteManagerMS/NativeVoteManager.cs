@@ -23,9 +23,10 @@ public class NativeVoteManager(ISharedSystem sharedSystem, ILogger logger) : INa
         logger.LogInformation($"Default menu compat has been set by {menuCompat.GetType().Assembly.GetName().FullName}");
     }
 
-    public void InitiateYesNoVote(YesNoVoteOptions options)
+    public VoteInitiateResult InitiateYesNoVote(YesNoVoteOptions options)
     {
-        EnsureNoActiveVote();
+        if (_activeHandler is not null)
+            return VoteInitiateResult.VoteAlreadyInProgress;
 
         if (options.Participants is null)
         {
@@ -37,19 +38,21 @@ public class NativeVoteManager(ISharedSystem sharedSystem, ILogger logger) : INa
 
         var handler = new NativeYesNoHandler(sharedSystem, logger, options);
         StartVote(handler);
+        return VoteInitiateResult.Success;
     }
 
-    public void InitiateMultiChoiceVote(MultiChoiceVoteOptions options)
+    public VoteInitiateResult InitiateMultiChoiceVote(MultiChoiceVoteOptions options)
     {
         if (_defaultMenuCompat is null)
-            throw new InvalidOperationException("Default menu compat is not set. Install a menu compat plugin or provide one via InitiateMultiChoiceVote overload.");
+            return VoteInitiateResult.NoMenuCompatSet;
 
-        InitiateMultiChoiceVote(options, _defaultMenuCompat);
+        return InitiateMultiChoiceVote(options, _defaultMenuCompat);
     }
 
-    public void InitiateMultiChoiceVote(MultiChoiceVoteOptions options, IMenuCompat customMenuCompat)
+    public VoteInitiateResult InitiateMultiChoiceVote(MultiChoiceVoteOptions options, IMenuCompat customMenuCompat)
     {
-        EnsureNoActiveVote();
+        if (_activeHandler is not null)
+            return VoteInitiateResult.VoteAlreadyInProgress;
 
         if (options.Participants is null)
         {
@@ -61,6 +64,7 @@ public class NativeVoteManager(ISharedSystem sharedSystem, ILogger logger) : INa
 
         var handler = new MultiChoiceHandler(customMenuCompat, options);
         StartVote(handler);
+        return VoteInitiateResult.Success;
     }
 
     private void StartVote(IVoteTypeHandler handler)
@@ -70,7 +74,7 @@ public class NativeVoteManager(ISharedSystem sharedSystem, ILogger logger) : INa
 
         if (handler.Duration > 0)
         {
-            _voteTimerId = sharedSystem.GetModSharp().PushTimer(EndVote, handler.Duration);
+            _voteTimerId = sharedSystem.GetModSharp().PushTimer(() => EndVote(), handler.Duration);
         }
     }
 
@@ -82,9 +86,9 @@ public class NativeVoteManager(ISharedSystem sharedSystem, ILogger logger) : INa
     public MultiChoiceVoteState? GetMultiChoiceVoteState() =>
         (_activeHandler as MultiChoiceHandler)?.GetState();
 
-    public void EndVote()
+    public VoteEndResult EndVote()
     {
-        if (_activeHandler is null) return;
+        if (_activeHandler is null) return VoteEndResult.NoVoteInProgress;
 
         StopTimer();
 
@@ -101,15 +105,17 @@ public class NativeVoteManager(ISharedSystem sharedSystem, ILogger logger) : INa
         }
 
         Cleanup();
+        return VoteEndResult.Success;
     }
 
-    public void CancelVote()
+    public VoteCancelResult CancelVote()
     {
-        if (_activeHandler is null) return;
+        if (_activeHandler is null) return VoteCancelResult.NoVoteInProgress;
 
         StopTimer();
         _activeHandler.OnVoteCancelled();
         Cleanup();
+        return VoteCancelResult.Success;
     }
 
     public ECommandAction OnRevoteCommand(IGameClient client, StringCommand command)
@@ -161,12 +167,6 @@ public class NativeVoteManager(ISharedSystem sharedSystem, ILogger logger) : INa
         if (_activeHandler is null) return;
         StopTimer();
         Cleanup();
-    }
-
-    private void EnsureNoActiveVote()
-    {
-        if (_activeHandler is not null)
-            throw new InvalidOperationException("A vote is already in progress.");
     }
 
     private void StopTimer()
