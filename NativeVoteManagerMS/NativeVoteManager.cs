@@ -4,10 +4,14 @@ using NativeVoteManagerMS.Handlers;
 using NativeVoteManagerMS.Shared;
 using NativeVoteManagerMS.Shared.Types;
 using Sharp.Shared;
+using Sharp.Shared.Enums;
+using Sharp.Shared.Listeners;
+using Sharp.Shared.Objects;
+using Sharp.Shared.Types;
 
 namespace NativeVoteManagerMS;
 
-public class NativeVoteManager(ISharedSystem sharedSystem, ILogger logger) : INativeVoteManager
+public class NativeVoteManager(ISharedSystem sharedSystem, ILogger logger) : INativeVoteManager, IGameListener
 {
     private IMenuCompat? _defaultMenuCompat;
     private IVoteTypeHandler? _activeHandler;
@@ -16,7 +20,7 @@ public class NativeVoteManager(ISharedSystem sharedSystem, ILogger logger) : INa
     public void SetDefaultMenuCompat(IMenuCompat menuCompat)
     {
         _defaultMenuCompat = menuCompat;
-        logger.LogInformation("Default menu compat has been set");
+        logger.LogInformation($"Default menu compat has been set by {menuCompat.GetType().Assembly.GetName().FullName}");
     }
 
     public void InitiateYesNoVote(YesNoVoteOptions options)
@@ -108,6 +112,32 @@ public class NativeVoteManager(ISharedSystem sharedSystem, ILogger logger) : INa
         Cleanup();
     }
 
+    public ECommandAction OnVoteCommand(IGameClient client, StringCommand command)
+    {
+        if (_activeHandler is not NativeYesNoHandler handler)
+            return ECommandAction.Skipped;
+
+        var arg = command.GetArg(1);
+
+        bool isYes;
+        if (arg is "option1" or "yes")
+            isYes = true;
+        else if (arg is "option2" or "no")
+            isYes = false;
+        else
+            return ECommandAction.Skipped;
+
+        handler.OnVoteCast(client, isYes);
+        return ECommandAction.Handled;
+    }
+
+    public void OnGameDeactivate()
+    {
+        if (_activeHandler is null) return;
+        StopTimer();
+        Cleanup();
+    }
+
     private void EnsureNoActiveVote()
     {
         if (_activeHandler is not null)
@@ -129,4 +159,7 @@ public class NativeVoteManager(ISharedSystem sharedSystem, ILogger logger) : INa
         _activeHandler?.Cleanup();
         _activeHandler = null;
     }
+
+    int IGameListener.ListenerVersion => IGameListener.ApiVersion;
+    int IGameListener.ListenerPriority => 0;
 }
