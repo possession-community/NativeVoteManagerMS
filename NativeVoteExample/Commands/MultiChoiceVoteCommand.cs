@@ -28,8 +28,8 @@ public class MultiChoiceVoteCommand(INativeVoteManager voteManager, ISharedSyste
                 {
                     Index = cacheI,
                     InternalName = $"InternalIdentifier_{cacheI}",
-                    VisibleName = _ => $"{command.GetArg(cacheI)}",
-                    VisibleDescription = _ => $"VisibleDescription_{cacheI}"
+                    VisibleName = LocalizedString.From(_ =>$"{command.GetArg(cacheI)}"),
+                    VisibleDescription = LocalizedString.From(_ =>$"VisibleDescription_{cacheI}")
                 });
             }
             else
@@ -38,7 +38,7 @@ public class MultiChoiceVoteCommand(INativeVoteManager voteManager, ISharedSyste
                 {
                     Index = cacheI,
                     InternalName = $"InternalIdentifier_{cacheI}",
-                    VisibleName = _ => $"{command.GetArg(cacheI)}",
+                    VisibleName = LocalizedString.From(_ =>$"{command.GetArg(cacheI)}"),
                 });
             }
             
@@ -46,8 +46,8 @@ public class MultiChoiceVoteCommand(INativeVoteManager voteManager, ISharedSyste
         
         var multiChoiceOption = new MultiChoiceVoteOptions
         {
-            Title = _ => "Title",
-            Description = _ => "Description",
+            Title = LocalizedString.From(_ =>"Title"),
+            Description = LocalizedString.From(_ =>"Description"),
             Participants = null,
             PassCondition = ConditionCheck,
             VoteDuration = 10.0F,

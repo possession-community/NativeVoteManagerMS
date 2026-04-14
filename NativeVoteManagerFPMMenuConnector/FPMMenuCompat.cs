@@ -26,21 +26,21 @@ public class FPMMenuCompat(ISharedSystem sharedSystem, IMenuManager menuManager)
 
         var menuBuilder = Menu.Create();
         
-        menuBuilder.Title(_voteOptions.Title());
+        menuBuilder.Title(_voteOptions.Title.Resolve());
 
         if (menuShuffle)
         {
             var shuffledContent = _voteOptions.VoteContents.Shuffle();
             foreach (var content in shuffledContent)
             {
-                menuBuilder.Item(content.VisibleName(), controller =>
+                menuBuilder.Item(content.VisibleName.Resolve(), controller =>
                 {
                     OnChoice(target, content);
                 });
                 
                 if (content.VisibleDescription is not null)
                 {
-                    menuBuilder.DisabledItem(content.VisibleDescription());
+                    menuBuilder.DisabledItem(content.VisibleDescription.Value.Resolve());
                 }
             }
         }
@@ -48,14 +48,14 @@ public class FPMMenuCompat(ISharedSystem sharedSystem, IMenuManager menuManager)
         {
             foreach (var content in _voteOptions.VoteContents)
             {
-                menuBuilder.Item(content.VisibleName(), controller =>
+                menuBuilder.Item(content.VisibleName.Resolve(), controller =>
                 {
                     OnChoice(target, content);
                 });
                 
                 if (content.VisibleDescription is not null)
                 {
-                    menuBuilder.DisabledItem(content.VisibleDescription());
+                    menuBuilder.DisabledItem(content.VisibleDescription.Value.Resolve());
                 }
             }
         }

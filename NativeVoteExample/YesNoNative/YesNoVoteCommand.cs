@@ -14,8 +14,8 @@ public class YesNoVoteCommand(INativeVoteManager voteManager, ISharedSystem shar
         
         var yesNoOption = new YesNoVoteOptions
         {
-            Title = _ => "Title But will not used in YesNoNative",
-            Description = _ => "Description But will not used in YesNoNative",
+            Title = LocalizedString.From(_ =>"Title But will not used in YesNoNative"),
+            Description = LocalizedString.From(_ =>"Description But will not used in YesNoNative"),
             Participants = null,
             PassCondition = ConditionCheck,
             VoteDuration = 10.0F,
