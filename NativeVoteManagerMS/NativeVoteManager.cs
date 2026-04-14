@@ -112,6 +112,31 @@ public class NativeVoteManager(ISharedSystem sharedSystem, ILogger logger) : INa
         Cleanup();
     }
 
+    public ECommandAction OnRevoteCommand(IGameClient client, StringCommand command)
+    {
+        if (_activeHandler is not MultiChoiceHandler handler)
+        {
+            client.Print(HudPrintChannel.Chat, "No multi-choice vote in progress.");
+            return ECommandAction.Handled;
+        }
+
+        handler.MenuCompat.OpenMenu(client);
+        return ECommandAction.Handled;
+    }
+
+    public ECommandAction OnCancelVoteCommand(IGameClient client, StringCommand command)
+    {
+        if (_activeHandler is null)
+        {
+            client.Print(HudPrintChannel.Chat, "No vote in progress.");
+            return ECommandAction.Handled;
+        }
+
+        CancelVote();
+        sharedSystem.GetModSharp().PrintToChatAll($"{client.Name} cancelled the vote.");
+        return ECommandAction.Handled;
+    }
+
     public ECommandAction OnVoteCommand(IGameClient client, StringCommand command)
     {
         if (_activeHandler is not NativeYesNoHandler handler)

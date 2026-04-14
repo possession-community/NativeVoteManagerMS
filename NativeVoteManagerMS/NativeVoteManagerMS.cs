@@ -44,6 +44,8 @@ public class NativeVoteManagerMs : IModSharpModule
         _voteManager = new NativeVoteManager(_sharedSystem, _logger);
         _sharedSystem.GetModSharp().InstallGameListener(_voteManager);
         _sharedSystem.GetClientManager().InstallCommandListener("vote", _voteManager.OnVoteCommand);
+        _sharedSystem.GetClientManager().InstallCommandCallback("cancelvote", _voteManager.OnCancelVoteCommand);
+        _sharedSystem.GetClientManager().InstallCommandCallback("revote", _voteManager.OnRevoteCommand);
         return true;
     }
 
@@ -57,5 +59,7 @@ public class NativeVoteManagerMs : IModSharpModule
         _voteManager.CancelVote();
         _sharedSystem.GetModSharp().RemoveGameListener(_voteManager);
         _sharedSystem.GetClientManager().RemoveCommandListener("vote", _voteManager.OnVoteCommand);
+        _sharedSystem.GetClientManager().RemoveCommandCallback("cancelvote", _voteManager.OnCancelVoteCommand);
+        _sharedSystem.GetClientManager().RemoveCommandCallback("revote", _voteManager.OnRevoteCommand);
     }
 }

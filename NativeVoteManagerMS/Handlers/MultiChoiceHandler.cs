@@ -9,13 +9,13 @@ namespace NativeVoteManagerMS.Handlers;
 
 internal class MultiChoiceHandler : IVoteTypeHandler
 {
-    private readonly IMenuCompat _menuCompat;
+    internal readonly IMenuCompat MenuCompat;
     private readonly MultiChoiceVoteOptions _options;
     private readonly Dictionary<VoteContent, List<IGameClient>> _votes = new();
 
     public MultiChoiceHandler(IMenuCompat menuCompat, MultiChoiceVoteOptions options)
     {
-        _menuCompat = menuCompat;
+        MenuCompat = menuCompat;
         _options = options;
     }
 
@@ -28,11 +28,11 @@ internal class MultiChoiceHandler : IVoteTypeHandler
             _votes[content] = new List<IGameClient>();
         }
 
-        _menuCompat.OnChoice = OnPlayerChoice;
-        _menuCompat.SetVoteOptions(_options);
+        MenuCompat.OnChoice = OnPlayerChoice;
+        MenuCompat.SetVoteOptions(_options);
         foreach (var pa in _options.Participants!)
         {
-            _menuCompat.OpenMenu(pa);
+            MenuCompat.OpenMenu(pa);
         }
         _options.VoteHandler.OnVoteInitiated();
     }
@@ -49,9 +49,10 @@ internal class MultiChoiceHandler : IVoteTypeHandler
             list.Add(chooser);
         }
 
-        _menuCompat.CloseMenu(chooser);
+        MenuCompat.CloseMenu(chooser);
         _options.VoteHandler.OnChoice(chooser, content, GetState());
     }
+
 
     public MultiChoiceVoteState GetState()
     {
@@ -104,14 +105,14 @@ internal class MultiChoiceHandler : IVoteTypeHandler
         {
             foreach (var participant in participants)
             {
-                _menuCompat.CloseMenu(participant);
+                MenuCompat.CloseMenu(participant);
             }
         }
     }
 
     public void Cleanup()
     {
-        _menuCompat.Cleanup();
+        MenuCompat.Cleanup();
         _votes.Clear();
     }
 }

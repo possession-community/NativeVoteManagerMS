@@ -14,47 +14,31 @@ public class FPMMenuCompat(ISharedSystem sharedSystem, IMenuManager menuManager)
     
     public void OpenMenu(IGameClient target)
     {
-        if (_menuCaches.TryGetValue(target, out var menu))
+        if (!_menuCaches.TryGetValue(target, out var menu))
         {
-            if (menuManager.IsInCurrentMenu(target, menu))
-                return;
+            var menuBuilder = Menu.Create();
+            menuBuilder.Title(_voteOptions.Title.Resolve());
+
+            var contents = _voteOptions.RandomShuffle
+                ? _voteOptions.VoteContents.Shuffle()
+                : _voteOptions.VoteContents;
+
+            foreach (var content in contents)
+            {
+                menuBuilder.Item(content.VisibleName.Resolve(), _ =>
+                {
+                    OnChoice(target, content);
+                });
+            }
             
-            menuManager.DisplayMenu(target, menu);
+            menu = menuBuilder.Build();
+            _menuCaches[target] = menu;
+        }
+
+        if (menuManager.IsInMenu(target) && menuManager.IsInCurrentMenu(target, menu))
             return;
-        }
 
-        bool menuShuffle = _voteOptions.RandomShuffle;
-
-        var menuBuilder = Menu.Create();
-        
-        menuBuilder.Title(_voteOptions.Title.Resolve());
-
-        if (menuShuffle)
-        {
-            var shuffledContent = _voteOptions.VoteContents.Shuffle();
-            foreach (var content in shuffledContent)
-            {
-                menuBuilder.Item(content.VisibleName.Resolve(), _ =>
-                {
-                    OnChoice(target, content);
-                });
-            }
-        }
-        else
-        {
-            foreach (var content in _voteOptions.VoteContents)
-            {
-                menuBuilder.Item(content.VisibleName.Resolve(), _ =>
-                {
-                    OnChoice(target, content);
-                });
-            }
-        }
-        
-        
-        var newMenu =  menuBuilder.Build();
-        _menuCaches[target] = newMenu;
-        menuManager.DisplayMenu(target, newMenu);
+        menuManager.DisplayMenu(target, menu);
     }
 
     public void CloseMenu(IGameClient target)

@@ -13,7 +13,7 @@ public class NativeVoteExample: IModSharpModule
     public NativeVoteExample(ISharedSystem  sharedSystem,
         string         dllPath,
         string         sharpPath,
-        Version?       version,
+        Version       version,
         IConfiguration coreConfiguration,
         bool           hotReload)
     {
