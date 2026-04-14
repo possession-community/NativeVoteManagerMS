@@ -37,11 +37,6 @@ public class FPMMenuCompat(ISharedSystem sharedSystem, IMenuManager menuManager)
                 {
                     OnChoice(target, content);
                 });
-                
-                if (content.VisibleDescription is not null)
-                {
-                    menuBuilder.DisabledItem(content.VisibleDescription.Value.Resolve());
-                }
             }
         }
         else
@@ -52,11 +47,6 @@ public class FPMMenuCompat(ISharedSystem sharedSystem, IMenuManager menuManager)
                 {
                     OnChoice(target, content);
                 });
-                
-                if (content.VisibleDescription is not null)
-                {
-                    menuBuilder.DisabledItem(content.VisibleDescription.Value.Resolve());
-                }
             }
         }
         
