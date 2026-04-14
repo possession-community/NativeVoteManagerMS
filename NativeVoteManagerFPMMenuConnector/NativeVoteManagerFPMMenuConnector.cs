@@ -36,9 +36,9 @@ public class NativeVoteManagerFPMMenuConnector : IModSharpModule
 
     private readonly ISharedSystem _sharedSystem;
     private readonly ILogger _logger;
-    private INativeVoteManager _nativeVoteManager;
+    private INativeVoteManager _nativeVoteManager = null!;
     private FPMMenuCompat _fpmMenuCompat = null!;
-    private IMenuManager _menuManager;
+    private IMenuManager _menuManager = null!;
 
     public bool Init()
     {

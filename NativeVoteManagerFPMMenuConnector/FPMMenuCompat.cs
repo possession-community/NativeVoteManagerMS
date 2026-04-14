@@ -8,6 +8,7 @@ namespace NativeVoteManagerFPMMenuConnector;
 
 public class FPMMenuCompat(ISharedSystem sharedSystem, IMenuManager menuManager): IMenuCompat
 {
+    public ISharedSystem SharedSystem { get; } = sharedSystem;
     private MultiChoiceVoteOptions _voteOptions = null!;
     private Dictionary<IGameClient, Menu> _menuCaches = new();
     
@@ -33,7 +34,7 @@ public class FPMMenuCompat(ISharedSystem sharedSystem, IMenuManager menuManager)
             var shuffledContent = _voteOptions.VoteContents.Shuffle();
             foreach (var content in shuffledContent)
             {
-                menuBuilder.Item(content.VisibleName.Resolve(), controller =>
+                menuBuilder.Item(content.VisibleName.Resolve(), _ =>
                 {
                     OnChoice(target, content);
                 });
@@ -43,7 +44,7 @@ public class FPMMenuCompat(ISharedSystem sharedSystem, IMenuManager menuManager)
         {
             foreach (var content in _voteOptions.VoteContents)
             {
-                menuBuilder.Item(content.VisibleName.Resolve(), controller =>
+                menuBuilder.Item(content.VisibleName.Resolve(), _ =>
                 {
                     OnChoice(target, content);
                 });
