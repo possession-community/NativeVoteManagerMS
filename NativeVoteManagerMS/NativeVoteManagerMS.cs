@@ -2,6 +2,7 @@ using System;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using NativeVoteManagerMS.Shared;
+using Sharp.Modules.LocalizerManager.Shared;
 using Sharp.Shared;
 
 namespace NativeVoteManagerMS;
@@ -52,6 +53,22 @@ public class NativeVoteManagerMs : IModSharpModule
     public void PostInit()
     {
         _sharedSystem.GetSharpModuleManager().RegisterSharpModuleInterface<INativeVoteManager>(this, INativeVoteManager.ModSharpModuleIdentity, _voteManager);
+    }
+
+    public void OnAllModulesLoaded()
+    {
+        var localizerManager = _sharedSystem.GetSharpModuleManager()
+            .GetOptionalSharpModuleInterface<ILocalizerManager>(ILocalizerManager.Identity)?.Instance;
+
+        if (localizerManager is not null)
+        {
+            localizerManager.LoadLocaleFile("nativevotemanager");
+            _voteManager.SetLocalizerManager(localizerManager);
+        }
+        else
+        {
+            _logger.LogWarning("LocalizerManager not found. Using default English messages.");
+        }
     }
 
     public void Shutdown()

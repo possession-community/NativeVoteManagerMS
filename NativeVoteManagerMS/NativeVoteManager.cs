@@ -3,7 +3,9 @@ using Microsoft.Extensions.Logging;
 using NativeVoteManagerMS.Handlers;
 using NativeVoteManagerMS.Shared;
 using NativeVoteManagerMS.Shared.Types;
+using Sharp.Modules.LocalizerManager.Shared;
 using Sharp.Shared;
+using Sharp.Shared.Definition;
 using Sharp.Shared.Enums;
 using Sharp.Shared.Listeners;
 using Sharp.Shared.Objects;
@@ -14,6 +16,8 @@ namespace NativeVoteManagerMS;
 public class NativeVoteManager(ISharedSystem sharedSystem, ILogger logger) : INativeVoteManager, IGameListener
 {
     private IMenuCompat? _defaultMenuCompat;
+    private IPermissionCompat? _defaultPermissionCompat;
+    private ILocalizerManager? _localizerManager;
     private IVoteTypeHandler? _activeHandler;
     private Guid? _voteTimerId;
 
@@ -21,6 +25,33 @@ public class NativeVoteManager(ISharedSystem sharedSystem, ILogger logger) : INa
     {
         _defaultMenuCompat = menuCompat;
         logger.LogInformation($"Default menu compat has been set by {menuCompat.GetType().Assembly.GetName().FullName}");
+    }
+
+    public void SetDefaultPermissionCompat(IPermissionCompat permissionCompat)
+    {
+        _defaultPermissionCompat = permissionCompat;
+        logger.LogInformation($"Default permission compat has been set by {permissionCompat.GetType().Assembly.GetName().FullName}");
+    }
+
+    internal void SetLocalizerManager(ILocalizerManager localizerManager)
+    {
+        _localizerManager = localizerManager;
+    }
+
+    private string Localize(IGameClient client, string key, params ReadOnlySpan<object?> args)
+    {
+        if (_localizerManager is null)
+            return args.Length > 0 ? string.Format(key, args.ToArray()) : key;
+
+        var localizer = _localizerManager.For(client);
+        return localizer.Text(key, args);
+    }
+
+    private string LocalizeWithPrefix(IGameClient client, string key, params ReadOnlySpan<object?> args)
+    {
+        var prefix = Localize(client, "Nvm.Chat.Prefix");
+        var message = Localize(client, key, args);
+        return $"{prefix} {message}";
     }
 
     public VoteInitiateResult InitiateYesNoVote(YesNoVoteOptions options)
@@ -122,7 +153,7 @@ public class NativeVoteManager(ISharedSystem sharedSystem, ILogger logger) : INa
     {
         if (_activeHandler is not MultiChoiceHandler handler)
         {
-            client.Print(HudPrintChannel.Chat, "No multi-choice vote in progress.");
+            client.Print(HudPrintChannel.Chat, LocalizeWithPrefix(client, "Nvm.Command.NoMultiChoiceVote"));
             return ECommandAction.Handled;
         }
 
@@ -132,14 +163,23 @@ public class NativeVoteManager(ISharedSystem sharedSystem, ILogger logger) : INa
 
     public ECommandAction OnCancelVoteCommand(IGameClient client, StringCommand command)
     {
+        if (_defaultPermissionCompat is not null && !_defaultPermissionCompat.HasPermission(client, "nvm.vote.cancel"))
+        {
+            client.Print(HudPrintChannel.Chat, LocalizeWithPrefix(client, "Nvm.Command.NotEnoughPermission"));
+            return ECommandAction.Handled;
+        }
+
         if (_activeHandler is null)
         {
-            client.Print(HudPrintChannel.Chat, "No vote in progress.");
+            client.Print(HudPrintChannel.Chat, LocalizeWithPrefix(client, "Nvm.Command.NoVoteInProgress"));
             return ECommandAction.Handled;
         }
 
         CancelVote();
-        sharedSystem.GetModSharp().PrintToChatAll($"{client.Name} cancelled the vote.");
+        foreach (var target in sharedSystem.GetModSharp().GetIServer().GetGameClients(true, true))
+        {
+            target.Print(HudPrintChannel.Chat, LocalizeWithPrefix(target, "Nvm.Broadcast.Vote.Cancelled", client.Name));
+        }
         return ECommandAction.Handled;
     }
 

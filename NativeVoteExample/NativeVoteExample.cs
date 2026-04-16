@@ -38,7 +38,7 @@ public class NativeVoteExample: IModSharpModule
 
     private readonly ISharedSystem _sharedSystem;
     private readonly ILogger _logger;
-    private INativeVoteManager _nativeVoteManager;
+    private INativeVoteManager _nativeVoteManager = null!;
     
     private YesNoVoteCommand _yesNoVoteCommand = null!;
     private MultiChoiceVoteCommand _multiChoiceVoteCommand = null!;

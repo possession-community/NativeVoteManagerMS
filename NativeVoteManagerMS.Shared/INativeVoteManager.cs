@@ -19,4 +19,5 @@ public interface INativeVoteManager
     MultiChoiceVoteState? GetMultiChoiceVoteState();
 
     void SetDefaultMenuCompat(IMenuCompat menuCompat);
+    void SetDefaultPermissionCompat(IPermissionCompat permissionCompat);
 }

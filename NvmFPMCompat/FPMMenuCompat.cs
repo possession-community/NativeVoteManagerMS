@@ -1,12 +1,15 @@
-﻿using NativeVoteManagerMS.Shared;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using NativeVoteManagerMS.Shared;
 using NativeVoteManagerMS.Shared.Types;
 using Sharp.Modules.MenuManager.Shared;
 using Sharp.Shared;
 using Sharp.Shared.Objects;
 
-namespace NativeVoteManagerFPMMenuConnector;
+namespace NvmFPMCompat;
 
-public class FPMMenuCompat(ISharedSystem sharedSystem, IMenuManager menuManager): IMenuCompat
+public class FpmMenuCompat(ISharedSystem sharedSystem, IMenuManager menuManager): IMenuCompat
 {
     public ISharedSystem SharedSystem { get; } = sharedSystem;
     private MultiChoiceVoteOptions _voteOptions = null!;

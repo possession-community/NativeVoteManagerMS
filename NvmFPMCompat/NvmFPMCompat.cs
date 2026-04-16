@@ -1,14 +1,16 @@
-﻿using Microsoft.Extensions.Configuration;
+using System;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using NativeVoteManagerMS.Shared;
+using Sharp.Modules.AdminManager.Shared;
 using Sharp.Modules.MenuManager.Shared;
 using Sharp.Shared;
 
-namespace NativeVoteManagerFPMMenuConnector;
+namespace NvmFPMCompat;
 
-public class NativeVoteManagerFPMMenuConnector : IModSharpModule
+public class NvmFPMCompat : IModSharpModule
 {
-    public NativeVoteManagerFPMMenuConnector(ISharedSystem  sharedSystem,
+    public NvmFPMCompat(ISharedSystem  sharedSystem,
         string         dllPath,
         string         sharpPath,
         Version?       version,
@@ -31,14 +33,12 @@ public class NativeVoteManagerFPMMenuConnector : IModSharpModule
         _logger = logger;
     }
 
-    public string DisplayName => "NativeVoteManagerMS - FPMMenuConnector";
+    public string DisplayName => "NativeVoteManagerMS - FPMCompat";
     public string DisplayAuthor => "faketuna";
 
     private readonly ISharedSystem _sharedSystem;
     private readonly ILogger _logger;
     private INativeVoteManager _nativeVoteManager = null!;
-    private FPMMenuCompat _fpmMenuCompat = null!;
-    private IMenuManager _menuManager = null!;
 
     public bool Init()
     {
@@ -51,12 +51,16 @@ public class NativeVoteManagerFPMMenuConnector : IModSharpModule
 
     public void OnAllModulesLoaded()
     {
-        _menuManager = _sharedSystem.GetSharpModuleManager()
+        _nativeVoteManager = _sharedSystem.GetSharpModuleManager()
+            .GetRequiredSharpModuleInterface<INativeVoteManager>(INativeVoteManager.ModSharpModuleIdentity).Instance!;
+
+        var menuManager = _sharedSystem.GetSharpModuleManager()
             .GetRequiredSharpModuleInterface<IMenuManager>(IMenuManager.Identity).Instance!;
-        
-        _fpmMenuCompat = new FPMMenuCompat(_sharedSystem, _menuManager);
-        _nativeVoteManager = _sharedSystem.GetSharpModuleManager().GetRequiredSharpModuleInterface<INativeVoteManager>(INativeVoteManager.ModSharpModuleIdentity).Instance!;
-        _nativeVoteManager.SetDefaultMenuCompat(_fpmMenuCompat);
+        _nativeVoteManager.SetDefaultMenuCompat(new FpmMenuCompat(_sharedSystem, menuManager));
+
+        var adminManager = _sharedSystem.GetSharpModuleManager()
+            .GetRequiredSharpModuleInterface<IAdminManager>(IAdminManager.Identity).Instance!;
+        _nativeVoteManager.SetDefaultPermissionCompat(new FpmPermissionCompat(adminManager));
     }
 
     public void Shutdown()

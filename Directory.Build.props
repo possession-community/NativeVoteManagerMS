@@ -1,0 +1,43 @@
+<Project>
+    <PropertyGroup>
+        <Version>0.0.1</Version>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        <Copyright>© 2025 faketuna</Copyright>
+        <RepositoryUrl>https://github.com/fltuna/NativeVoteManagerMS</RepositoryUrl>
+        <TargetFramework>net10.0</TargetFramework>
+        <LangVersion>13</LangVersion>
+        <ImplicitUsings>false</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+        <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
+        <CheckForOverflowUnderflow>True</CheckForOverflowUnderflow>
+        <DebugSymbols>true</DebugSymbols>
+        <DebugType>embedded</DebugType>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <BuildDateTime>$([System.DateTime]::Now.ToString("yyyy-MM-dd HH:mm:ss"))</BuildDateTime>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+        <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
+        <CheckForOverflowUnderflow>True</CheckForOverflowUnderflow>
+        <DebugSymbols>true</DebugSymbols>
+        <DebugType>embedded</DebugType>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <Compile Remove="obj\**" />
+        <EmbeddedResource Remove="obj\**" />
+        <None Remove="obj\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <AssemblyAttribute Include="System.Reflection.AssemblyMetadataAttribute">
+            <_Parameter1>BuildTime</_Parameter1>
+            <_Parameter2>$(BuildDateTime)</_Parameter2>
+        </AssemblyAttribute>
+    </ItemGroup>
+</Project>
