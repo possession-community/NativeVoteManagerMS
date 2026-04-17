@@ -34,7 +34,7 @@ internal class NativeYesNoHandler : IVoteTypeHandler
         RefreshVotes();
 
         foreach (var participant in _options.Participants!)
-            SendVoteStartUm(participant);
+            SendVoteStartUm(participant, _options.Title, _options.Description);
 
         _options.VoteHandler.OnVoteInitiated();
     }

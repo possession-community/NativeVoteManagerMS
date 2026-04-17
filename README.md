@@ -49,11 +49,16 @@ public void OnAllModulesLoaded()
 
 ### YesNo Vote
 
+YesNo votes use CS2's native vote UI, which only accepts **SFUI translation keys** (strings starting with `#`). The game engine performs client-side translation — the plugin's `LocalizerManager` is **not** applied to `Title` / `Description`.
+
+- `Title` — SFUI key for the vote question (e.g. `#SFUI_vote_kick_player`). Defaults to `#SFUI_Vote_None`.
+- `Description` — argument substituted into the Title template (`%s1%`). Leave empty for templates that take no argument.
+
 ```csharp
 var options = new YesNoVoteOptions
 {
-    Title = LocalizedString.From(_ => "Kick player?"),
-    Description = LocalizedString.From(_ => "Vote to kick"),
+    Title = "#SFUI_vote_kick_player",  // SFUI key — engine translates per client
+    Description = targetPlayer.Name,   // %s1% substitution in the SFUI template
     Participants = null, // null = all players
     PassCondition = result => result.Choices[0].Voters.Count > result.Choices[1].Voters.Count,
     VoteDuration = 10.0F,

@@ -14,8 +14,9 @@ public class YesNoVoteCommand(INativeVoteManager voteManager, ISharedSystem shar
         
         var yesNoOption = new YesNoVoteOptions
         {
-            Title = LocalizedString.From(_ =>"Title But will not used in YesNoNative"),
-            Description = LocalizedString.From(_ =>"Description But will not used in YesNoNative"),
+            // SFUI key — CS2 engine translates client-side. Description is the '%s1%' substitution arg.
+            Title = "#SFUI_vote_kick_player",
+            Description = executor.Name,
             Participants = null,
             PassCondition = ConditionCheck,
             VoteDuration = 10.0F,

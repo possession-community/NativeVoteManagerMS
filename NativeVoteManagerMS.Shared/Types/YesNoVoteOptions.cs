@@ -8,11 +8,19 @@ namespace NativeVoteManagerMS.Shared.Types;
 /// </summary>
 public record YesNoVoteOptions
 {
-    /// <summary>Title of this vote.</summary>
-    public required LocalizedString Title { get; init; }
+    /// <summary>
+    /// SFUI key used as the CS2 native vote UI title (DispStr).
+    /// Must be a CS2 translation key starting with '#' (e.g. '#SFUI_vote_kick_player').
+    /// Client-side translation is performed by the game engine, not by this plugin's localizer.
+    /// Defaults to '#SFUI_Vote_None' (no specific vote type).
+    /// </summary>
+    public string Title { get; init; } = "#SFUI_Vote_None";
 
-    /// <summary>Description of this vote.</summary>
-    public required LocalizedString Description { get; init; }
+    /// <summary>
+    /// Argument passed to the CS2 native vote UI (DetailsStr) — typically substituted into the Title's SFUI template.
+    /// Leave empty if the Title's template takes no argument.
+    /// </summary>
+    public string Description { get; init; } = string.Empty;
 
     /// <summary>Duration of this vote. Set to below zero to never ends until INativeVoteManager.EndVote() called.</summary>
     public required float VoteDuration { get; init; }
