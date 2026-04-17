@@ -41,14 +41,14 @@ If you're writing a plugin that uses `INativeVoteManager`, add the Shared packag
 
 ```xml
 <ItemGroup>
-  <PackageReference Include="NativeVoteManagerMS.Shared" Version="0.0.3" ExcludeAssets="runtime" />
+  <PackageReference Include="NativeVoteManagerMS.Shared" Version="*" ExcludeAssets="runtime" />
 </ItemGroup>
 ```
 
 Or via CLI:
 
 ```bash
-dotnet add package NativeVoteManagerMS.Shared --version 0.0.3
+dotnet add package NativeVoteManagerMS.Shared
 ```
 
 `ExcludeAssets="runtime"` is important — the Shared DLL is already shipped by the server-side module, so you must not bundle it with your plugin.
