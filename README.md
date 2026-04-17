@@ -1,6 +1,6 @@
 # NativeVoteManagerMS
 
-A [ModSharp](https://github.com/modsharp) module for Counter-Strike 2 that provides a native vote management system. Supports both YesNo votes (using CS2's built-in vote UI) and MultiChoice votes (using a pluggable menu system).
+A [ModSharp](https://github.com/Kxnrl/modsharp-public) module for Counter-Strike 2 that provides a native vote management system. Supports both YesNo votes (using CS2's built-in vote UI) and MultiChoice votes (using a pluggable menu system).
 
 ## Features
 
