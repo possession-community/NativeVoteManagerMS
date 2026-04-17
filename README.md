@@ -13,17 +13,17 @@ A [ModSharp](https://github.com/modsharp) module for Counter-Strike 2 that provi
 
 ## Project Structure
 
-| Project | Description |
-|---|---|
-| `NativeVoteManagerMS` | Core module - vote lifecycle, commands, localization |
-| `NativeVoteManagerMS.Shared` | Public API - `INativeVoteManager`, types, compat interfaces |
-| `NvmFPMCompat` | FPM connector - implements `IMenuCompat` and `IPermissionCompat` using FPM's MenuManager and AdminManager |
-| `NativeVoteExample` | Example module demonstrating how to use the API |
+| Proj ect                     | Description                                                                                               |
+|------------------------------|-----------------------------------------------------------------------------------------------------------|
+| `NativeVoteManagerMS`        | Core module - vote lifecycle, commands, localization                                                      |
+| `NativeVoteManagerMS.Shared` | Public API - `INativeVoteManager`, types, compat interfaces                                               |
+| `NvmFPMCompat`               | FPM connector - implements `IMenuCompat` and `IPermissionCompat` using FPM's MenuManager and AdminManager |
+| `NativeVoteExample`          | Example module demonstrating how to use the API                                                           |
 
 ## Dependencies
 
 - `ModSharp.Sharp.Shared` >= 2.1.118
-- `ModSharp.Sharp.Modules.LocalizerManager.Shared` >= 2.1.118 (optional, for localization)
+- `ModSharp.Sharp.Modules.LocalizerManager.Shared` >= 2.1.118
 - `ModSharp.Sharp.Modules.AdminManager.Shared` >= 2.1.118 (NvmFPMCompat only)
 - `ModSharp.Sharp.Modules.MenuManager.Shared` >= 2.1.118 (NvmFPMCompat only)
 
@@ -197,10 +197,10 @@ public void OnAllModulesLoaded()
 
 ## Permissions
 
-| Permission | Description |
-|---|---|
+| Permission        | Description                       |
+|-------------------|-----------------------------------|
 | `nvm.vote.cancel` | Allow player to use `!cancelvote` |
 
 ## License
 
-Copyright (c) 2025 faketuna
+Copyright (c) 2025-2026 faketuna

@@ -4,10 +4,17 @@
         <PackageId>NativeVoteManagerMS.Shared</PackageId>
         <Authors>faketuna</Authors>
         <Description>Public API for NativeVoteManagerMS — a ModSharp module providing a native vote management system for Counter-Strike 2.</Description>
+        <PackageLicenseFile>LICENSE</PackageLicenseFile>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
     </PropertyGroup>
 
     <ItemGroup>
         <PackageReference Include="ModSharp.Sharp.Shared" Version="2.1.118" ExcludeAssets="runtime" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Include="..\LICENSE" Pack="true" PackagePath="\" />
+        <None Include="..\README.md" Pack="true" PackagePath="\" />
     </ItemGroup>
 
 </Project>
