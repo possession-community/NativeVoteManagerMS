@@ -35,6 +35,26 @@ Grab the latest release zip from [Releases](https://github.com/fltuna/NativeVote
 2. Deploy `NvmFPMCompat.dll` (or your own compat implementation)
 3. Copy `locales/nativevotemanager.json` to `{sharp}/locales/`
 
+## For Plugin Developers (consuming the API)
+
+If you're writing a plugin that uses `INativeVoteManager`, add the Shared package from NuGet:
+
+```xml
+<ItemGroup>
+  <PackageReference Include="NativeVoteManagerMS.Shared" Version="0.0.3" ExcludeAssets="runtime" />
+</ItemGroup>
+```
+
+Or via CLI:
+
+```bash
+dotnet add package NativeVoteManagerMS.Shared --version 0.0.3
+```
+
+`ExcludeAssets="runtime"` is important — the Shared DLL is already shipped by the server-side module, so you must not bundle it with your plugin.
+
+Check [NuGet.org](https://www.nuget.org/packages/NativeVoteManagerMS.Shared) for the latest version.
+
 ## Usage
 
 ### Getting the API
