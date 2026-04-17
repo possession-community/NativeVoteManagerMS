@@ -29,10 +29,11 @@ A [ModSharp](https://github.com/modsharp) module for Counter-Strike 2 that provi
 
 ## Installation
 
-1. Build the solution
-2. Deploy `NativeVoteManagerMS.dll` and `NativeVoteManagerMS.Shared.dll` to your ModSharp modules directory
-3. Deploy `NvmFPMCompat.dll` (or your own compat implementation)
-4. Copy `locales/nativevotemanager.json` to `{sharp}/locales/`
+Grab the latest release zip from [Releases](https://github.com/fltuna/NativeVoteManagerMS/releases/latest) (or build from source), then:
+
+1. Deploy `NativeVoteManagerMS.dll` and `NativeVoteManagerMS.Shared.dll` to your ModSharp modules directory
+2. Deploy `NvmFPMCompat.dll` (or your own compat implementation)
+3. Copy `locales/nativevotemanager.json` to `{sharp}/locales/`
 
 ## Usage
 
