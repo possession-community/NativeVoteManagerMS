@@ -13,7 +13,7 @@ A [ModSharp](https://github.com/Kxnrl/modsharp-public) module for Counter-Strike
 
 ## Project Structure
 
-| Proj ect                     | Description                                                                                               |
+| Project                      | Description                                                                                               |
 |------------------------------|-----------------------------------------------------------------------------------------------------------|
 | `NativeVoteManagerMS`        | Core module - vote lifecycle, commands, localization                                                      |
 | `NativeVoteManagerMS.Shared` | Public API - `INativeVoteManager`, types, compat interfaces                                               |
