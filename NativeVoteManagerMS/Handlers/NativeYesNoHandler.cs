@@ -16,6 +16,7 @@ internal class NativeYesNoHandler : IVoteTypeHandler
 
     private readonly List<IGameClient> _yesVoters = new();
     private readonly List<IGameClient> _noVoters = new();
+    private readonly List<IGameClient> _participants = new();
 
     private static readonly VoteContent YesContent = new() { Index = 0, InternalName = "yes", VisibleName = LocalizedString.From(_ =>"Yes") };
     private static readonly VoteContent NoContent = new() { Index = 1, InternalName = "no", VisibleName = LocalizedString.From(_ =>"No") };
@@ -31,9 +32,11 @@ internal class NativeYesNoHandler : IVoteTypeHandler
 
     public void Start()
     {
+        _participants.AddRange(_options.Participants!);
+
         RefreshVotes();
 
-        foreach (var participant in _options.Participants!)
+        foreach (var participant in _participants)
             SendVoteStartUm(participant, _options.Title, _options.Description);
 
         _options.VoteHandler.OnVoteInitiated();
@@ -74,7 +77,7 @@ internal class NativeYesNoHandler : IVoteTypeHandler
             _yesVoters.Count,
             _noVoters.Count,
             _yesVoters.Count + _noVoters.Count,
-            _options.Participants!.Count
+            _participants.Count
         );
     }
 
@@ -92,7 +95,7 @@ internal class NativeYesNoHandler : IVoteTypeHandler
             .FirstOrDefault()
             ?.Content;
 
-        return new VoteResult(choices, _options.Participants!, winner);
+        return new VoteResult(choices, _participants.AsReadOnly(), winner);
     }
 
     public bool CheckPassCondition(VoteResult result) =>
@@ -100,7 +103,7 @@ internal class NativeYesNoHandler : IVoteTypeHandler
 
     public void OnVotePassed(VoteResult result)
     {
-        foreach (var participant in _options.Participants!)
+        foreach (var participant in _participants)
             SendVotePassedUm(participant);
 
         _options.VoteHandler.OnVotePassed(result);
@@ -108,7 +111,7 @@ internal class NativeYesNoHandler : IVoteTypeHandler
 
     public void OnVoteFailed(VoteResult result)
     {
-        foreach (var participant in _options.Participants!)
+        foreach (var participant in _participants)
             SendVoteFailedUm(participant);
 
         _options.VoteHandler.OnVoteFailed(result);
@@ -116,10 +119,21 @@ internal class NativeYesNoHandler : IVoteTypeHandler
 
     public void OnVoteCancelled()
     {
-        foreach (var participant in _options.Participants!)
+        foreach (var participant in _participants)
             SendVoteFailedUm(participant, NativeYesNoEndReason.NoReason);
 
         _options.VoteHandler.OnVoteCancelled();
+    }
+
+    public void OnParticipantDisconnected(IGameClient client)
+    {
+        if (!_participants.Remove(client))
+            return;
+
+        _yesVoters.Remove(client);
+        _noVoters.Remove(client);
+
+        RefreshVotes();
     }
 
     public void Close()
@@ -130,6 +144,7 @@ internal class NativeYesNoHandler : IVoteTypeHandler
     {
         _yesVoters.Clear();
         _noVoters.Clear();
+        _participants.Clear();
     }
 
     private void RefreshVotes()
@@ -142,7 +157,7 @@ internal class NativeYesNoHandler : IVoteTypeHandler
         @event.SetInt("vote_option3", 0);
         @event.SetInt("vote_option4", 0);
         @event.SetInt("vote_option5", 0);
-        @event.SetInt("potentialVotes", _options.Participants!.Count);
+        @event.SetInt("potentialVotes", _participants.Count);
 
         @event.Fire(false);
     }

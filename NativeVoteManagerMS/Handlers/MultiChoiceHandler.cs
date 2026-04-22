@@ -12,6 +12,7 @@ internal class MultiChoiceHandler : IVoteTypeHandler
     internal readonly IMenuCompat MenuCompat;
     private readonly MultiChoiceVoteOptions _options;
     private readonly Dictionary<VoteContent, List<IGameClient>> _votes = new();
+    private readonly List<IGameClient> _participants = new();
 
     public MultiChoiceHandler(IMenuCompat menuCompat, MultiChoiceVoteOptions options)
     {
@@ -23,6 +24,8 @@ internal class MultiChoiceHandler : IVoteTypeHandler
 
     public void Start()
     {
+        _participants.AddRange(_options.Participants!);
+
         foreach (var content in _options.VoteContents)
         {
             _votes[content] = new List<IGameClient>();
@@ -30,7 +33,7 @@ internal class MultiChoiceHandler : IVoteTypeHandler
 
         MenuCompat.OnChoice = OnPlayerChoice;
         MenuCompat.SetVoteOptions(_options);
-        foreach (var pa in _options.Participants!)
+        foreach (var pa in _participants)
         {
             MenuCompat.OpenMenu(pa);
         }
@@ -67,7 +70,7 @@ internal class MultiChoiceHandler : IVoteTypeHandler
             _options,
             choices,
             votedCount,
-            _options.Participants!.Count
+            _participants.Count
         );
     }
 
@@ -84,7 +87,7 @@ internal class MultiChoiceHandler : IVoteTypeHandler
             .FirstOrDefault()
             ?.Content;
 
-        return new VoteResult(choices, _options.Participants!, winner);
+        return new VoteResult(choices, _participants.AsReadOnly(), winner);
     }
 
     public bool CheckPassCondition(VoteResult result) =>
@@ -99,14 +102,22 @@ internal class MultiChoiceHandler : IVoteTypeHandler
     public void OnVoteCancelled() =>
         _options.VoteHandler.OnVoteCancelled();
 
+    public void OnParticipantDisconnected(IGameClient client)
+    {
+        if (!_participants.Remove(client))
+            return;
+
+        foreach (var voters in _votes.Values)
+        {
+            voters.Remove(client);
+        }
+    }
+
     public void Close()
     {
-        if (_options.Participants is { } participants)
+        foreach (var participant in _participants)
         {
-            foreach (var participant in participants)
-            {
-                MenuCompat.CloseMenu(participant);
-            }
+            MenuCompat.CloseMenu(participant);
         }
     }
 
@@ -114,5 +125,6 @@ internal class MultiChoiceHandler : IVoteTypeHandler
     {
         MenuCompat.Cleanup();
         _votes.Clear();
+        _participants.Clear();
     }
 }

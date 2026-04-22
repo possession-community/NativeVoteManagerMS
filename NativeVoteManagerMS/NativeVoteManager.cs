@@ -13,7 +13,7 @@ using Sharp.Shared.Types;
 
 namespace NativeVoteManagerMS;
 
-public class NativeVoteManager(ISharedSystem sharedSystem, ILogger logger) : INativeVoteManager, IGameListener
+public class NativeVoteManager(ISharedSystem sharedSystem, ILogger logger) : INativeVoteManager, IGameListener, IClientListener
 {
     private IMenuCompat? _defaultMenuCompat;
     private IPermissionCompat? _defaultPermissionCompat;
@@ -209,6 +209,11 @@ public class NativeVoteManager(ISharedSystem sharedSystem, ILogger logger) : INa
         Cleanup();
     }
 
+    void IClientListener.OnClientDisconnecting(IGameClient client, NetworkDisconnectionReason reason)
+    {
+        _activeHandler?.OnParticipantDisconnected(client);
+    }
+
     private void StopTimer()
     {
         if (_voteTimerId is { } timerId)
@@ -227,4 +232,7 @@ public class NativeVoteManager(ISharedSystem sharedSystem, ILogger logger) : INa
 
     int IGameListener.ListenerVersion => IGameListener.ApiVersion;
     int IGameListener.ListenerPriority => 0;
+
+    int IClientListener.ListenerVersion => IClientListener.ApiVersion;
+    int IClientListener.ListenerPriority => 0;
 }
