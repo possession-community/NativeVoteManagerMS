@@ -123,6 +123,7 @@ internal class MultiChoiceHandler : IVoteTypeHandler
 
     public void Cleanup()
     {
+        MenuCompat.OnChoice = (_, _) => { };
         MenuCompat.Cleanup();
         _votes.Clear();
         _participants.Clear();
