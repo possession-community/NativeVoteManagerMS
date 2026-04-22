@@ -186,7 +186,7 @@ public class NativeVoteManager(ISharedSystem sharedSystem, ILogger logger) : INa
     public ECommandAction OnVoteCommand(IGameClient client, StringCommand command)
     {
         if (_activeHandler is not NativeYesNoHandler handler)
-            return ECommandAction.Skipped;
+            return ECommandAction.Handled;
 
         var arg = command.GetArg(1);
 
@@ -196,7 +196,7 @@ public class NativeVoteManager(ISharedSystem sharedSystem, ILogger logger) : INa
         else if (arg is "option2" or "no")
             isYes = false;
         else
-            return ECommandAction.Skipped;
+            return ECommandAction.Handled;
 
         handler.OnVoteCast(client, isYes);
         return ECommandAction.Handled;
