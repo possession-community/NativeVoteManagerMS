@@ -111,6 +111,8 @@ internal class MultiChoiceHandler : IVoteTypeHandler
         {
             voters.Remove(client);
         }
+
+        _options.VoteHandler.OnParticipantDisconnected(client, GetState());
     }
 
     public void Close()

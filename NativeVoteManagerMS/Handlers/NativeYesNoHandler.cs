@@ -134,6 +134,7 @@ internal class NativeYesNoHandler : IVoteTypeHandler
         _noVoters.Remove(client);
 
         RefreshVotes();
+        _options.VoteHandler.OnParticipantDisconnected(client, GetState());
     }
 
     public void Close()

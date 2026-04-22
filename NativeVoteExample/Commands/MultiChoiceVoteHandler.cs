@@ -31,4 +31,9 @@ public class MultiChoiceVoteHandler(ISharedSystem sharedSystem): IMultiChoiceVot
     {
         sharedSystem.GetModSharp().PrintToChatAll("MultiChoiceVote Failed");
     }
+
+    public void OnParticipantDisconnected(IGameClient client, MultiChoiceVoteState state)
+    {
+        sharedSystem.GetModSharp().PrintToChatAll($"{client.Name} disconnected | Voted/Participants {state.VotedCount}/{state.ParticipantCount}");
+    }
 }

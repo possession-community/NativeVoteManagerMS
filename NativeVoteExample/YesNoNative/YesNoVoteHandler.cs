@@ -32,4 +32,9 @@ public class YesNoVoteHandler(ISharedSystem sharedSystem): IYesNoVoteHandler
     {
         sharedSystem.GetModSharp().PrintToChatAll("NativeYesNoVote Failed");
     }
+
+    public void OnParticipantDisconnected(IGameClient client, YesNoVoteState state)
+    {
+        sharedSystem.GetModSharp().PrintToChatAll($"{client.Name} disconnected | Voted/Participants {state.VotedCount}/{state.ParticipantCount}");
+    }
 }
