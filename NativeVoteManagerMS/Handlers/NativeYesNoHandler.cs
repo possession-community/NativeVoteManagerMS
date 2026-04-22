@@ -104,7 +104,7 @@ internal class NativeYesNoHandler : IVoteTypeHandler
     public void OnVotePassed(VoteResult result)
     {
         foreach (var participant in _participants)
-            SendVotePassedUm(participant);
+            SendVotePassedUm(participant, _options.PassTitle, _options.PassDescription);
 
         _options.VoteHandler.OnVotePassed(result);
     }

@@ -22,6 +22,19 @@ public record YesNoVoteOptions
     /// </summary>
     public string Description { get; init; } = string.Empty;
 
+    /// <summary>
+    /// SFUI key used as the CS2 native vote pass UI title (DispStr in CCSUsrMsg_VotePass).
+    /// Must be a CS2 translation key starting with '#'.
+    /// Defaults to '#SFUI_vote_passed'.
+    /// </summary>
+    public string PassTitle { get; init; } = "#SFUI_vote_passed";
+
+    /// <summary>
+    /// Argument passed to the CS2 native vote pass UI (DetailsStr) — typically substituted into the PassTitle's SFUI template.
+    /// Leave empty if the PassTitle's template takes no argument.
+    /// </summary>
+    public string PassDescription { get; init; } = string.Empty;
+
     /// <summary>Duration of this vote. Set to below zero to never ends until INativeVoteManager.EndVote() called.</summary>
     public required float VoteDuration { get; init; }
 
