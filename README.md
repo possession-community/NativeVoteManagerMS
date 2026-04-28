@@ -29,7 +29,7 @@ A [ModSharp](https://github.com/Kxnrl/modsharp-public) module for Counter-Strike
 
 ## Installation
 
-Grab the latest release zip from [Releases](https://github.com/fltuna/NativeVoteManagerMS/releases/latest) (or build from source), then:
+Grab the latest release zip from [Releases](https://github.com/possession-community/NativeVoteManagerMS/releases/latest) (or build from source), then:
 
 1. Deploy `NativeVoteManagerMS.dll` and `NativeVoteManagerMS.Shared.dll` to your ModSharp modules directory
 2. Deploy `NvmFPMCompat.dll` (or your own compat implementation)

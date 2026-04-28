@@ -1,0 +1,55 @@
+name: Bump ModSharp
+
+on:
+  schedule:
+    - cron: '0 15 * * *'  # 00:00 JST
+  workflow_dispatch:
+
+jobs:
+  bump-shared:
+    uses: possession-community/modsharp-publish-action/.github/workflows/bump-nuget.yml@v1
+    permissions:
+      contents: write
+      pull-requests: write
+    with:
+      package-id: ModSharp.Sharp.Shared
+      csproj-paths: |
+        NativeVoteExample/NativeVoteExample.csproj
+        NativeVoteManagerMS/NativeVoteManagerMS.csproj
+        NativeVoteManagerMS.Shared/NativeVoteManagerMS.Shared.csproj
+        NvmFPMCompat/NvmFPMCompat.csproj
+      pr-labels: dependencies
+
+  bump-adminmanager:
+    uses: possession-community/modsharp-publish-action/.github/workflows/bump-nuget.yml@v1
+    permissions:
+      contents: write
+      pull-requests: write
+    with:
+      package-id: ModSharp.Sharp.Modules.AdminManager.Shared
+      csproj-paths: |
+        NativeVoteManagerMS/NativeVoteManagerMS.csproj
+        NvmFPMCompat/NvmFPMCompat.csproj
+      pr-labels: dependencies
+
+  bump-localizermanager:
+    uses: possession-community/modsharp-publish-action/.github/workflows/bump-nuget.yml@v1
+    permissions:
+      contents: write
+      pull-requests: write
+    with:
+      package-id: ModSharp.Sharp.Modules.LocalizerManager.Shared
+      csproj-paths: |
+        NativeVoteManagerMS/NativeVoteManagerMS.csproj
+      pr-labels: dependencies
+
+  bump-menumanager:
+    uses: possession-community/modsharp-publish-action/.github/workflows/bump-nuget.yml@v1
+    permissions:
+      contents: write
+      pull-requests: write
+    with:
+      package-id: ModSharp.Sharp.Modules.MenuManager.Shared
+      csproj-paths: |
+        NvmFPMCompat/NvmFPMCompat.csproj
+      pr-labels: dependencies

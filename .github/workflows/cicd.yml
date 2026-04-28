@@ -7,7 +7,7 @@ on:
 
 jobs:
   cicd:
-    uses: fltuna/modsharp-publish-action/.github/workflows/deploy.yml@v1
+    uses: possession-community/modsharp-publish-action/.github/workflows/deploy.yml@v1
     with:
       projects: |
         NativeVoteManagerMS
