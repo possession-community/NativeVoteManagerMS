@@ -18,9 +18,9 @@ public record YesNoVoteOptions
 
     /// <summary>
     /// Argument passed to the CS2 native vote UI (DetailsStr) — typically substituted into the Title's SFUI template.
-    /// Leave empty if the Title's template takes no argument.
+    /// Resolved per-participant when set. Leave null if the Title's template takes no argument.
     /// </summary>
-    public string Description { get; init; } = string.Empty;
+    public LocalizedString? Description { get; init; }
 
     /// <summary>
     /// SFUI key used as the CS2 native vote pass UI title (DispStr in CCSUsrMsg_VotePass).
@@ -31,9 +31,9 @@ public record YesNoVoteOptions
 
     /// <summary>
     /// Argument passed to the CS2 native vote pass UI (DetailsStr) — typically substituted into the PassTitle's SFUI template.
-    /// Leave empty if the PassTitle's template takes no argument.
+    /// Resolved per-participant when set. Leave null if the PassTitle's template takes no argument.
     /// </summary>
-    public string PassDescription { get; init; } = string.Empty;
+    public LocalizedString? PassDescription { get; init; }
 
     /// <summary>Duration of this vote. Set to below zero to never ends until INativeVoteManager.EndVote() called.</summary>
     public required float VoteDuration { get; init; }

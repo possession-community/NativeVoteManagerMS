@@ -16,7 +16,7 @@ public class YesNoVoteCommand(INativeVoteManager voteManager, ISharedSystem shar
         {
             // SFUI key — CS2 engine translates client-side. Description is the '%s1%' substitution arg.
             Title = "#SFUI_vote_kick_player",
-            Description = executor.Name,
+            Description = LocalizedString.From(_ => executor.Name),
             Participants = null,
             PassCondition = ConditionCheck,
             VoteDuration = 10.0F,

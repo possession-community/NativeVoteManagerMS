@@ -37,7 +37,10 @@ internal class NativeYesNoHandler : IVoteTypeHandler
         RefreshVotes();
 
         foreach (var participant in _participants)
-            SendVoteStartUm(participant, _options.Title, _options.Description);
+        {
+            var description = _options.Description?.Resolve() ?? "";
+            SendVoteStartUm(participant, _options.Title, description);
+        }
 
         _options.VoteHandler.OnVoteInitiated();
     }
@@ -107,7 +110,10 @@ internal class NativeYesNoHandler : IVoteTypeHandler
     public void OnVotePassed(VoteResult result)
     {
         foreach (var participant in _participants)
-            SendVotePassedUm(participant, _options.PassTitle, _options.PassDescription);
+        {
+            var passDescription = _options.PassDescription?.Resolve() ?? "";
+            SendVotePassedUm(participant, _options.PassTitle, passDescription);
+        }
 
         _options.VoteHandler.OnVotePassed(result);
     }
