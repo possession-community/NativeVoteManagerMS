@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Extensions.Logging;
@@ -29,6 +30,7 @@ internal class NativeYesNoHandler : IVoteTypeHandler
     }
 
     public float Duration => _options.VoteDuration;
+    public Action? OnAllVoted { get; set; }
 
     public void Start()
     {
@@ -71,6 +73,9 @@ internal class NativeYesNoHandler : IVoteTypeHandler
 
         RefreshVotes();
         _options.VoteHandler.OnChoice(chooser, isYes, GetState());
+
+        if (HaveAllParticipantsVoted())
+            OnAllVoted?.Invoke();
     }
 
     public bool HaveAllParticipantsVoted()

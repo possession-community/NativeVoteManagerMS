@@ -101,6 +101,7 @@ public class NativeVoteManager(ISharedSystem sharedSystem, ILogger logger) : INa
     private void StartVote(IVoteTypeHandler handler)
     {
         _activeHandler = handler;
+        handler.OnAllVoted = () => EndVote();
         handler.Start();
 
         if (handler.Duration > 0)
@@ -199,10 +200,6 @@ public class NativeVoteManager(ISharedSystem sharedSystem, ILogger logger) : INa
             return ECommandAction.Handled;
 
         handler.OnVoteCast(client, isYes);
-
-        if (handler.HaveAllParticipantsVoted())
-            EndVote();
-
         return ECommandAction.Handled;
     }
 

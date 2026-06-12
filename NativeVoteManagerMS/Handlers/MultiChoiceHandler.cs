@@ -21,6 +21,7 @@ internal class MultiChoiceHandler : IVoteTypeHandler
     }
 
     public float Duration => _options.VoteDuration;
+    public Action? OnAllVoted { get; set; }
 
     public void Start()
     {
@@ -54,6 +55,9 @@ internal class MultiChoiceHandler : IVoteTypeHandler
 
         MenuCompat.CloseMenu(chooser);
         _options.VoteHandler.OnChoice(chooser, content, GetState());
+
+        if (HaveAllParticipantsVoted())
+            OnAllVoted?.Invoke();
     }
 
 
@@ -101,6 +105,9 @@ internal class MultiChoiceHandler : IVoteTypeHandler
 
     public void OnVoteCancelled() =>
         _options.VoteHandler.OnVoteCancelled();
+
+    public bool HaveAllParticipantsVoted()
+        => _participants.Count > 0 && _votes.Values.Sum(v => v.Count) >= _participants.Count;
 
     public void OnParticipantDisconnected(IGameClient client)
     {

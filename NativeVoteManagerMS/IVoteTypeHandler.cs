@@ -6,6 +6,7 @@ namespace NativeVoteManagerMS;
 internal interface IVoteTypeHandler
 {
     float Duration { get; }
+    System.Action? OnAllVoted { get; set; }
     void Start();
     VoteResult BuildResult();
     bool CheckPassCondition(VoteResult result);
@@ -13,6 +14,7 @@ internal interface IVoteTypeHandler
     void OnVoteFailed(VoteResult result);
     void OnVoteCancelled();
     void OnParticipantDisconnected(IGameClient client);
+    bool HaveAllParticipantsVoted();
     void Close();
     void Cleanup();
 }
