@@ -199,6 +199,10 @@ public class NativeVoteManager(ISharedSystem sharedSystem, ILogger logger) : INa
             return ECommandAction.Handled;
 
         handler.OnVoteCast(client, isYes);
+
+        if (handler.HaveAllParticipantsVoted())
+            EndVote();
+
         return ECommandAction.Handled;
     }
 

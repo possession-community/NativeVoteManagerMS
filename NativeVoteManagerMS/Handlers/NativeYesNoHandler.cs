@@ -70,6 +70,9 @@ internal class NativeYesNoHandler : IVoteTypeHandler
         _options.VoteHandler.OnChoice(chooser, isYes, GetState());
     }
 
+    public bool HaveAllParticipantsVoted()
+        => _participants.Count > 0 && _yesVoters.Count + _noVoters.Count >= _participants.Count;
+
     public YesNoVoteState GetState()
     {
         return new YesNoVoteState(
